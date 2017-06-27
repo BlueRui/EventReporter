@@ -9,15 +9,22 @@ import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
+  EventFragment listFragment;
+  CommentFragment gridFragment;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    // Show different fragments based on screen size.
-    if (findViewById(R.id.fragment_container) != null) {
-      Fragment fragment = isTablet() ? new  CommentFragment() : new EventFragment();
-      getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+    //add list view
+    if (isTablet()) {
+      listFragment = new EventFragment();
+      getSupportFragmentManager().beginTransaction().add(R.id.event_container, listFragment).commit();
     }
+
+    //add Gridview
+    gridFragment = new CommentFragment();
+    getSupportFragmentManager().beginTransaction().add(R.id.comment_container, gridFragment).commit();
   }
 
   private boolean isTablet() {
