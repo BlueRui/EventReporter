@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -49,11 +50,22 @@ public class EventAdapter extends BaseAdapter {
     TextView eventTitle = (TextView) convertView.findViewById(R.id.event_title);
     TextView eventAddress = (TextView) convertView.findViewById(R.id.event_address);
     TextView eventDescription = (TextView) convertView.findViewById(R.id.event_description);
+    ImageView eventImage = (ImageView) convertView.findViewById(R.id.event_thumbnail);
 
     Event r = eventData.get(position);
     eventTitle.setText(r.getTitle());
     eventAddress.setText(r.getAddress());
     eventDescription.setText(r.getDescription());
+
+    if (position < 2) {
+      eventImage.setImageDrawable(context.getDrawable(R.drawable.event_thumbnail));
+    } else if (position >= 2 && position < 4) {
+      eventImage.setImageDrawable(context.getDrawable(R.drawable.banana));
+    } else if (position >= 4 && position < 6) {
+      eventImage.setImageDrawable(context.getDrawable(R.drawable.orange));
+    } else {
+      eventImage.setImageDrawable(context.getDrawable(R.drawable.pear));
+    }
 
     return convertView;
   }

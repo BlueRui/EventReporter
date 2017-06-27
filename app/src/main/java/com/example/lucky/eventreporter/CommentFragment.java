@@ -1,12 +1,14 @@
 package com.example.lucky.eventreporter;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 
@@ -32,14 +34,13 @@ public class CommentFragment extends Fragment {
     return view;
   }
 
-  public void onItemSelected(int position){
-    for (int i = 0; i < gridView.getChildCount(); i++){
+  public void onItemSelected(int position) {
+    for (int i = 0; i < gridView.getChildCount(); i++) {
       if (position == i) {
         gridView.getChildAt(i).setBackgroundColor(Color.BLUE);
-      } else {     			   gridView.getChildAt(i).setBackgroundColor(Color.parseColor("#EEEEEE"));
+      } else {
+        gridView.getChildAt(i).setBackgroundColor(Color.parseColor("#EEEEEE"));
       }
     }
   }
-
-
 }

@@ -5,10 +5,12 @@
     android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/event_thumbnail"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/event_thumbnail"
         android:layout_weight="1"/>
+
+    <!--android:src="@drawable/event_thumbnail"-->
 
     <RelativeLayout
         android:layout_width="match_parent"
