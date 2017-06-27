@@ -1,7 +1,9 @@
 package com.example.lucky.eventreporter;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -11,25 +13,21 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-    // Get ListView object from xml
-    ListView eventListView = (ListView) findViewById(R.id.event_list);
-
-    // Initialize an adapter
-/*    // Returns a view for each object in a collection of data objects you provide
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-            this,                 // Context: The current context.
-            R.layout.event_item,  // int: The resource ID for a layout file containing a layout to use when instantiating views.
-            R.id.event_name,      // int: The id of the TextView within the layout resource to be populated
-            getEventNames());     // T: The objects to represent in the ListView.*/
-
-    EventAdapter adapter = new EventAdapter(this);
-
-    // Assign adapter to ListView
-    eventListView.setAdapter(adapter);
+    // Show different fragments based on screen size.
+    if (findViewById(R.id.fragment_container) != null) {
+      Fragment fragment = isTablet() ? new  CommentFragment() : new EventFragment();
+      getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+    }
   }
 
-//  /**
+  private boolean isTablet() {
+    return (getApplicationContext().getResources().getConfiguration().screenLayout &
+            Configuration.SCREENLAYOUT_SIZE_MASK) >=
+            Configuration.SCREENLAYOUT_SIZE_LARGE;
+  }
+
+
+  //  /**
 //   * A dummy function to get fake event names
 //   *
 //   * @ return an array of ake event names
@@ -43,5 +41,18 @@ public class MainActivity extends AppCompatActivity {
     return names;
   }*/
 
+  // Get ListView object from xml
+//    ListView eventListView = (ListView) findViewById(R.id.event_list);
 
+  // Initialize an adapter
+/*    // Returns a view for each object in a collection of data objects you provide
+    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+            this,                 // Context: The current context.
+            R.layout.event_item,  // int: The resource ID for a layout file containing a layout to use when instantiating views.
+            R.id.event_name,      // int: The id of the TextView within the layout resource to be populated
+            getEventNames());     // T: The objects to represent in the ListView.*/
+
+//    EventAdapter adapter = new EventAdapter(this);
+  // Assign adapter to ListView
+//    eventListView.setAdapter(adapter);
 }
