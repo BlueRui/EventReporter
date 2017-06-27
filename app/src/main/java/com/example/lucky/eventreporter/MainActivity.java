@@ -7,7 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EventFragment.OnItemSelectListener {
+
 
   EventFragment listFragment;
   CommentFragment gridFragment;
@@ -32,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
             Configuration.SCREENLAYOUT_SIZE_MASK) >=
             Configuration.SCREENLAYOUT_SIZE_LARGE;
   }
+
+  @Override
+  public void onItemSelected(int position){
+    gridFragment.onItemSelected(position);
+  }
+
 
 
   //  /**

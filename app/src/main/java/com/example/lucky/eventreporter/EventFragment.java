@@ -1,11 +1,13 @@
 package com.example.lucky.eventreporter;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,6 +16,12 @@ import android.widget.ListView;
  * A simple {@link Fragment} subclass.
  */
 public class EventFragment extends Fragment {
+
+  OnItemSelectListener mCallback;
+  // Container Activity must implement this interface
+  public interface OnItemSelectListener {
+    public void onItemSelected(int position);
+  }
 
 
   public EventFragment() {
@@ -34,6 +42,13 @@ public class EventFragment extends Fragment {
 
     // Assign adapter to ListView.
     listView.setAdapter(adapter);
+
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        mCallback.onItemSelected(i);
+      }
+    });
     return view;
   }
 
@@ -44,6 +59,16 @@ public class EventFragment extends Fragment {
             "Event7", "Event8", "Event9",
             "Event10", "Event11", "Event12"};
     return names;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    try {
+      mCallback = (OnItemSelectListener) context;
+    } catch (ClassCastException e) {
+      //do something
+    }
   }
 
 
