@@ -12,6 +12,7 @@ public class EventActivity extends AppCompatActivity {
   ReportEventFragment reportFragment;
   String username;
   TextView usernameTextView;
+  private ShowEventFragment showEventsFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,13 @@ public class EventActivity extends AppCompatActivity {
                             .replace(R.id.fragment_container, reportFragment).commit();
                     break;
                   case R.id.action_events:
+                    if (showEventsFragment == null) {
+                      showEventsFragment = new ShowEventFragment();
+                    }
 
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, showEventsFragment).commit();
+                    break;
                 }
                 return false;
               }

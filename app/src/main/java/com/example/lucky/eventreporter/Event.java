@@ -8,7 +8,6 @@ public class Event {
   /**
    * All data for an event
    */
-  private String title;
   private String address;
   private String description;
   private int good;
@@ -18,6 +17,10 @@ public class Event {
   private String location;
   private long time;
   private String username;
+  private int repost;
+  private String title;
+  private String imgUri;
+
   /**
    * Constructor
    */
@@ -69,10 +72,12 @@ public class Event {
     this.username = username;
   }
 
-  public String getTitle() {
+  public void setRepost(int repost) { this.repost = repost; }
 
-    return title;
-  }
+  public void setImgUri(String imgUri) { this.imgUri = imgUri; }
+
+
+  public String getTitle() { return title; }
 
   public String getAddress() {
     return address;
@@ -109,4 +114,9 @@ public class Event {
   public String getUser() {
     return username;
   }
+
+  public int getRepost() { return repost; }
+
+  public String getImgUri() { return imgUri; }
+
 }
