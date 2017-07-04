@@ -11,7 +11,13 @@ public class Event {
   private String title;
   private String address;
   private String description;
-
+  private int good;
+  private int bad;
+  private int commentNumber;
+  private String id;
+  private String location;
+  private long time;
+  private String username;
   /**
    * Constructor
    */
@@ -21,10 +27,50 @@ public class Event {
     this.description = description;
   }
 
-  /**
-   * Getters for private attributes of Event Class
-   */
+  public Event() {}
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setGood(int good) {
+    this.good = good;
+  }
+
+  public void setBad(int bad) {
+    this.bad = bad;
+  }
+
+  public void setCommentNumber(int commentNumber) {
+    this.commentNumber = commentNumber;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public void setTime(long time) {
+    this.time = time;
+  }
+
+  public void setUser(String username) {
+    this.username = username;
+  }
+
   public String getTitle() {
+
     return title;
   }
 
@@ -34,5 +80,33 @@ public class Event {
 
   public String getDescription() {
     return description;
+  }
+
+  public int getGood() {
+    return good;
+  }
+
+  public int getBad() {
+    return bad;
+  }
+
+  public int getCommentNumber() {
+    return commentNumber;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public long getTime() {
+    return time;
+  }
+
+  public String getUser() {
+    return username;
   }
 }
