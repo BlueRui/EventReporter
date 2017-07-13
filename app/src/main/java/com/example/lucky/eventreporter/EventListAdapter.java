@@ -181,14 +181,24 @@ public class EventListAdapter extends BaseAdapter {
       holder.description.setText(event.getDescription());
       holder.time.setText(Utilities.timeTransformer(event.getTime()));
 
-      if (event.getImgUri() != "") {
+      if (!event.getImgUri().equals("")) {
         final String url = event.getImgUri();
 
         holder.imgview.setVisibility(View.VISIBLE);
         new AsyncTask<Void, Void, Bitmap>() {
           @Override
           protected Bitmap doInBackground(Void... params) {
-            return Utilities.getBitmapFromURL(url);
+            Bitmap bitmap = null;
+            if (lrucache != null) {
+              bitmap = lrucache.get(url);
+            }
+            if (bitmap == null) {
+              bitmap = Utilities.getBitmapFromURL(url);
+              addBitmapToMemoryCache(url, bitmap);
+            } else {
+              bitmap = getBitmapFromMemCache(url);
+            }
+            return bitmap;
           }
 
           @Override
@@ -272,6 +282,16 @@ public class EventListAdapter extends BaseAdapter {
     adView.setNativeAd(nativeContentAd);
   }
 
+
+  public void addBitmapToMemoryCache(String url, Bitmap bitmap) {
+    if (getBitmapFromMemCache(url) == null) {
+      lrucache.put(url, bitmap);
+    }
+  }
+
+  public Bitmap getBitmapFromMemCache(String url) {
+    return lrucache.get(url);
+  }
 
   static class ViewHolder {
     TextView title;
