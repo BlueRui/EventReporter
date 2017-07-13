@@ -19,7 +19,7 @@ public class Event {
   private String username;
   private int repost;
   private String title;
-  private String imgUri;
+  private String imgUri = "";
 
   /**
    * Constructor

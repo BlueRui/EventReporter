@@ -58,6 +58,7 @@ public class ShowEventFragment extends Fragment {
         // reverse event list, show latest event first -- Rui
         Collections.reverse(events);
         eventListAdapter = new EventListAdapter(getContext(), events);
+        eventListAdapter.setUserName(((EventActivity)getActivity()).getUsername());
         listView.setAdapter(eventListAdapter);
 
       }

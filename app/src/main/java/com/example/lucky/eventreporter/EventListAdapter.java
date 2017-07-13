@@ -1,8 +1,10 @@
 package com.example.lucky.eventreporter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ public class EventListAdapter extends BaseAdapter {
   private List<Event> eventList;
   private DatabaseReference databaseReference;
   private LayoutInflater inflater;
+  private LruCache<String, Bitmap> lrucache;
 
   private static final String ADMOB_AD_UNIT_ID = "ca-app-pub-3940256099942544/2247696110";
   private static final String ADMOB_APP_ID = "ca-app-pub-3940256099942544~3347511713";
@@ -48,6 +51,7 @@ public class EventListAdapter extends BaseAdapter {
   private static final int TYPE_MAX_COUNT = TYPE_ADS + 1;
   private AdLoader.Builder builder;
   private TreeSet mSeparatorsSet = new TreeSet();
+  private String username;
 
   public EventListAdapter(Context context) {
     this.context = context;
@@ -71,11 +75,33 @@ public class EventListAdapter extends BaseAdapter {
       this.eventList.add(eventList.get(i));
     }
 
-    //initialie ads
+    //initialize ads
     MobileAds.initialize(context, ADMOB_APP_ID);
     builder = new AdLoader.Builder(context, ADMOB_AD_UNIT_ID);
     inflater = (LayoutInflater) context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);
+
+    // initialize LRU cache
+    // Get max available VM memory, exceeding this amount will throw an
+    // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+    // int in its constructor.
+    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+    // Use 1/8th of the available memory for this memory cache.
+    final int cacheSize = maxMemory / 8;
+
+    lrucache = new LruCache<String, Bitmap>(cacheSize) {
+      @Override
+      protected int sizeOf(String key, Bitmap bitmap) {
+        // The cache size will be measured in kilobytes rather than
+        // number of items.
+        return bitmap.getByteCount() / 1024;
+      }
+    };
+  }
+
+    public void setUserName(String username) {
+    this.username = username;
   }
 
   @Override
@@ -155,8 +181,9 @@ public class EventListAdapter extends BaseAdapter {
       holder.description.setText(event.getDescription());
       holder.time.setText(Utilities.timeTransformer(event.getTime()));
 
-      if (event.getImgUri() != null) {
+      if (event.getImgUri() != "") {
         final String url = event.getImgUri();
+
         holder.imgview.setVisibility(View.VISIBLE);
         new AsyncTask<Void, Void, Bitmap>() {
           @Override
@@ -199,6 +226,17 @@ public class EventListAdapter extends BaseAdapter {
 
             }
           });
+        }
+      });
+      rowView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = new Intent(context, CommentActivity.class);
+
+          String eventId = event.getId();
+          intent.putExtra("EventID", eventId);
+          intent.putExtra("Commenter", username);
+          context.startActivity(intent);
         }
       });
     }
