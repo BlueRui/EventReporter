@@ -179,6 +179,7 @@ public class ReportEventFragment extends Fragment {
           toast.show();
           mTextViewLocation.setText("");
           getmTextViewDest.setText("");
+          mTextViewTitle.setText("");
         }
       }
     });

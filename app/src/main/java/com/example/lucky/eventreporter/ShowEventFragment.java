@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -54,6 +55,8 @@ public class ShowEventFragment extends Fragment {
           Event event = noteDataSnapshot.getValue(Event.class);
           events.add(event);
         }
+        // reverse event list, show latest event first -- Rui
+        Collections.reverse(events);
         eventListAdapter = new EventListAdapter(getContext(), events);
         listView.setAdapter(eventListAdapter);
 
