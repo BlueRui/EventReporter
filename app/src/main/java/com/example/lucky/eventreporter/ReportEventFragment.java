@@ -1,10 +1,15 @@
 package com.example.lucky.eventreporter;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -36,6 +41,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -73,6 +80,7 @@ public class ReportEventFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_report_event, container, false);
     mTextViewLocation = (EditText) view.findViewById(R.id.text_event_location);
+    mTextViewLocation.setText(getAddress());
     mTextViewTitle = (EditText) view.findViewById(R.id.text_event_title);
 
     checkPermission();
@@ -243,5 +251,50 @@ public class ReportEventFragment extends Fragment {
     });
   }
 
+  private String getAddress() {
 
+    if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions( getActivity(), new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+              2);
+    }
+
+    LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+    double longitude = 0;
+    double latitude = 0;
+
+    if (locationManager != null) {
+      // The minimum distance to change Updates in meters
+      final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+
+      // The minimum time between updates in milliseconds
+      final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+      Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      if (location != null) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Log.i(TAG, latitude + ":" + longitude);
+      }
+    }
+
+    return getCurrentAddress(latitude,longitude);
+  }
+
+  private String getCurrentAddress(double latitude, double longitude) {
+    Log.i(TAG, "latitude = " + latitude + " longtitude = " + longitude);
+    Geocoder geocoder;
+    List<Address> addresses;
+    geocoder = new Geocoder(getContext(), Locale.getDefault());
+    try {
+      addresses = geocoder.getFromLocation(latitude, longitude, 1);
+      String address = addresses.get(0).getAddressLine(0);
+      String city = addresses.get(0).getLocality();
+      String state = addresses.get(0).getAdminArea();
+      String country = addresses.get(0).getCountryName();
+      return address + ", " + city + ", " + state + ", " + country;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return "";
+  }
 }
