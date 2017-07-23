@@ -47,7 +47,7 @@
                           android:layout_height="wrap_content"
                           android:text="San Francisco, CA"
                           android:paddingRight="10dp"
-                          android:textSize="16sp"
+                          android:textSize="15sp"
                           android:textColor="#939393"
                           android:fontFamily="Roboto"/>
 
@@ -65,7 +65,8 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:paddingTop="6dp"
-                  android:textSize="11sp"
+                  android:textSize="15sp"
+                  android:text="This is so cool"
                   android:fontFamily="Roboto"
                   android:textColor="#2A2C30"/>
     </LinearLayout>
