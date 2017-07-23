@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -40,7 +42,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -185,7 +189,7 @@ public class ReportEventFragment extends Fragment {
         } else {
           Toast toast = Toast.makeText(getContext(), "The event is reported", Toast.LENGTH_SHORT);
           toast.show();
-          mTextViewLocation.setText("");
+//          mTextViewLocation.setText("");
           getmTextViewDest.setText("");
           mTextViewTitle.setText("");
         }
@@ -228,12 +232,51 @@ public class ReportEventFragment extends Fragment {
   /**
    * Upload image and get file path
    */
-  private void uploadImage(final String imgPath, final String eventId) {
+/*  private void uploadImage(final String imgPath, final String eventId) {
     Uri file = Uri.fromFile(new File(imgPath));
     StorageReference imgRef = storageRef.child("images/" + file.getLastPathSegment());
 
     UploadTask uploadTask = imgRef.putFile(file);
 
+    // Register observers to listen for when the download is done or if it fails
+    uploadTask.addOnFailureListener(new OnFailureListener() {
+      @Override
+      public void onFailure(@NonNull Exception exception) {
+        // Handle unsuccessful uploads
+      }
+    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+      @Override
+      public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+        Log.i(TAG, "upload successfully");
+        database.child("events").child(eventId).child("imgUri").setValue(downloadUrl.toString());
+      }
+    });
+  }*/
+  private void uploadImage(final String imgPath, final String eventId) {
+    Uri file = Uri.fromFile(new File(imgPath));
+    StorageReference imgRef = storageRef.child("images/" + file.getLastPathSegment());
+    File fileOrigin = new File(imgPath);
+    // try to downsize the image before uploading, max 800 * 800
+    Bitmap bitmap = BitmapFactory.decodeFile(fileOrigin.getAbsolutePath());
+    // original measurements
+    int origWidth = bitmap.getWidth();
+    int origHeight = bitmap.getHeight();
+    final int destWidth = 800;//or the width you need
+
+    if (origWidth > destWidth) {
+      // picture is wider than we want it, we calculate its target height
+      int destHeight = origHeight / (origWidth / destWidth);
+      // we create an scaled bitmap so it reduces the image, not just trim it
+      Bitmap bitmapScaled = Bitmap.createScaledBitmap(bitmap, destWidth, destHeight, false);
+      bitmap = bitmapScaled;
+    }
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    byte[] data = baos.toByteArray();
+
+    UploadTask uploadTask = imgRef.putBytes(data);
     // Register observers to listen for when the download is done or if it fails
     uploadTask.addOnFailureListener(new OnFailureListener() {
       @Override
